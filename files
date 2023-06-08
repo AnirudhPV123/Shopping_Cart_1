@@ -1,0 +1,43 @@
+([
+  {
+    $match:{user:new objectId(userId)}
+  },
+  {
+    $lookup:{
+      from:PRODUCTS_COLLECTION,
+      let:{productList:'$products'},
+      pipeline:[
+        {
+          $match:{
+            $expr:{
+              $in:['$ObjectId',"$$productList"]
+            }
+          }
+        }
+      ],
+      as:'cartItems'
+    }
+  }
+])
+
+// ([
+//   {
+//     $match:{user:new objectId(userId)}
+//   },
+//   {
+//     $lookup:{
+//       from:PRODUCTS_COLLECTION,
+//       let:{productList:'$products'},
+//       pipeline:[
+//         {
+//           $match:{
+//             $expr:{
+//               $in:['$ObjectId',"$$productList"]
+//             }
+//           }
+//         }
+//       ],
+//       as:'cartItems'
+//     }
+//   }
+// ])

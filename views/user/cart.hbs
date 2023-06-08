@@ -1,0 +1,86 @@
+<section>
+  <div class="container">
+
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Item</th>
+          <th scope="col">Title</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+        <tr>
+          <td>1.</td>
+          {{#each product}}
+          <td><img style="height: 45px; width: auto;" src="/product-images/{{this._id}}.jpg" alt=""></td>
+          <td>{{this.Name}}</td>
+          <td>{{this.Price}}</td>
+          {{/each}}
+          <td>
+            <button class="cart-item-count mr-3" style="height: 35px; width: 35px;"
+              onclick="changeCount('{{this._id}}','{{this.item}}',-1)">-</button>
+            <span id="{{this.item}}">{{this.quantity}}</span>
+            <button class="cart-item-count ml-3" style="height: 35px; width: 35px;"
+              onclick="changeCount('{{this._id}}','{{this.item}}',1)">+</button>
+          </td>
+          <td><button class="btn btn-danger" id="{{this.item}}"
+              onclick="changeCount('{{this._id}}','{{this.item}}',0)">Remove</button>
+        </tr>
+        {{/each}}
+
+      </tbody>
+    </table>
+
+    <hr>
+    <a href="/place-order" class="btn btn-success mt-4 pl-5 pr-5 float-right mr-5">Place Order</a>
+
+    <h4 class="mt-4 pl-5 pr-5 float-right mr-5">Total: Rs.<span id="total">{{total}}</span></h4>
+
+
+
+  </div>
+</section>
+
+<script>
+
+  function changeCount(cartId, proId, count) {
+    let quantity = parseInt(document.getElementById(proId).innerHTML)
+    count = parseInt(count)
+
+    $.ajax({
+      url: '/change-product-quantity',
+      data: {
+        cart: cartId,
+        product: proId,
+        count: count,
+        quantity: quantity  
+      },
+      method: 'post',
+      success: (response) => {
+        if (response.removeProduct == 0) {
+          alert('Are you want to delete this product ?')
+          location.reload()
+        }
+        else if (response.removeProduct == 1) {
+          alert('Product removed from cart...')
+          location.reload()
+        } else {
+          document.getElementById(proId).innerHTML = quantity + count
+
+          document.getElementById('total').innerHTML = response.total
+
+
+        }
+
+      }
+    })
+
+  }
+
+
+</script>
