@@ -14,7 +14,7 @@ const verifyLogin = (req, res, next) => {  //middleware use to check whether log
 }
 
 /* GET home page. */
-router.get('/', async function (req, res) {
+router.get('/',async(req, res)=>{
 
   let user = req.session.user
 
@@ -38,6 +38,7 @@ router.get('/', async function (req, res) {
 });
 
 router.get('/login', (req, res) => {
+
   if (req.session.userLoggedIn) {
     res.redirect('/')
   } else {
